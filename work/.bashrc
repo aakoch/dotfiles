@@ -30,6 +30,43 @@ alias gs='git status'
 alias gf='git fetch'
 alias gco='git checkout'
 
+# Stolen from bash-it: https://github.com/Bash-it/bash-it
+alias ..='cd ..'         # Go up one directory
+alias ...='cd ../..'     # Go up two directories
+alias ....='cd ../../..' # Go up three directories
+alias -- -='cd -'        # Go back
+
+function mkcd ()
+{
+    about 'make a directory and cd into it'
+    param 'path to create'
+    example '$ mkcd foo'
+    example '$ mkcd /tmp/img/photos/large'
+    group 'base'
+    mkdir -p -- "$*"
+    cd -- "$*"
+}
+
+# http://unix.stackexchange.com/questions/97920/how-to-cd-automatically-after-git-clone/
+git_real_home=`which git`
+git()
+{
+   local tmp=$(mktemp)
+   local repo_name
+
+   if [ "$1" = clone ] ; then
+     $git_real_home "$@" | tee $tmp
+     repo_name=$(awk -F\' '/Cloning into/ {print $2}' $tmp)
+     rm $tmp
+     printf "changing to directory %s\n" "$repo_name"
+     cd "$repo_name"
+   else
+     $git_real_home "$@"
+   fi
+}
+
 # make **/ match files in the current directory and its subdirectories recursively
 # ie. rm **/*.bak
-shopt -s globstar
+# shopt -s globstar
+# :( didn't work for me
+
