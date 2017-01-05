@@ -24,5 +24,12 @@ alias build="cd common/build-project/; mvn clean install -DskipTests=true"
 alias edit='function edit() { nohup "/c/Program Files (x86)/Notepad++/notepad++.exe" $1 &};edit'
 alias reload="echo \"Reloading .bashrc...\";source ~/.bashrc"
 alias putty='function putty() { nohup "/c/Program Files (x86)/PuTTY/putty.exe" $1 & };putty'
-alias gs='git status'
 
+# Git aliases
+alias gs='git status'
+alias gf='git fetch'
+alias gco='git checkout'
+
+# make **/ match files in the current directory and its subdirectories recursively
+# ie. rm **/*.bak
+shopt -s globstar
