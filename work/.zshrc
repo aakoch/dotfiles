@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=~/.oh-my-zsh
+export ZSH=/Users/<<REPLACE ME>>/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -68,6 +68,7 @@ plugins=(
   copydir
   copyfile
   cp
+  emoji
   encode64
   gradle
   history-adam
@@ -107,20 +108,26 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias date="gdate --iso-8601=ns"
+alias isodate="gdate --iso-8601=ns"
+alias date="gdate"
 alias datefilename="echo $(gdate --iso-8601=ns) | tr -c \"[:alnum:]\" \"-\""
 alias cc="cat ~/common_commands.txt"
 alias copy=pbcopy
 alias paste=pbpaste
 alias finder="open ."
+alias branch="git rev-parse --abbrev-ref HEAD"
+alias time_summary="python ~/projects/readdates.py"
+
 export JAVA8_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home
 export JAVA10_HOME=/Library/Java/JavaVirtualMachines/jdk-10.0.1.jdk/Contents/Home
 export PATH=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home/bin:/Applications/gradle-4.7/bin:/Applications/groovy-2.4.15/bin:$PATH
 export NVM_DIR="$HOME/.nvm"
+
 . "/usr/local/opt/nvm/nvm.sh"
 PROJECT_PATHS=(~/projects)
 
-
+bindkey "^?" backward-kill-word
+bindkey "^[?" backward-word
 
 function plugins() {
     PLUGIN_PATH="~/.oh-my-zsh/plugins/"
@@ -128,3 +135,52 @@ function plugins() {
         echo "\n\nPlugin: $plugin"; grep -r "^function w*" "$PLUGIN_PATH$plugin/" | awk '{print $2}' | sed 's/()//'| tr '\n' ', '; grep -r "^alias" $PLUGIN_PATH$plugin | awk '{print $2 }' | sed 's/=.*//' |  tr '\n' ', '
     done
 }
+
+function record() {
+  echo "$(gdate --iso-8601=seconds) $@" >> ~/Documents/time.txt
+  tail ~/Documents/time.txt
+}
+
+function gitlog() {
+  if [[ $# -eq 0 ]] then
+    echo "Please provide which release to get logs for. Example: gitlog \$(gitlatestreleaseversion | sed 's/\./\\\\\./g')"
+  else
+    git --no-pager log --merges --all --pretty="format:%Cred%h %Cblue%an, %Cgreen%ar %Creset%<(120,mtrunc)%s" --grep="Merge pull request .* to release/$@" --grep="Merge pull request .* to develop$" --since="3 months ago"
+fi
+}
+
+function gitlatestrelease() {
+  git ls-remote --symref origin release\* | sed 's?.*refs/heads/??' | sed '$!d'
+}
+
+function gitlatestreleaseversion() {
+  git ls-remote --symref origin release\* | sed 's?.*refs/heads/release/??' | sed '$!d'
+  #git ls-remote --symref origin release\* | sed 's?.*refs/heads/release/??' | sed '$!d' | sed 's/\./\\\./g'
+}
+
+function removeblanklines() {
+  sed -i '.bak' '/^$/d' $@
+}
+
+function deleteblanklines() {
+  removeblanklines $@
+}
+
+function proofpoint_url_decode() {
+  python3 ~/projects/proofpoint/URLDefenseDecode.py $@
+}
+
+# reads file, formats and writes it back
+function xmlformat() {
+  if [ ! -f $@ ]; then
+    echo "File not found"
+  else
+    xmllint --format --nowarning -o $1 $1
+  fi
+}
+
+# z - jump-around: https://github.com/rupa/z.git
+. ~/Library/z/z.sh
+
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
