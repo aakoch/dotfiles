@@ -1,6 +1,5 @@
 [user]
 	name = Koch, Adam A
-	email = <<Removed>>
 [alias]
 co = checkout
   ignore=!([ ! -e .gitignore ] && touch .gitignore) | (test "$(tail -c 1 ".gitignore")" && echo '' >>.gitignore) | echo $1 >>.gitignore

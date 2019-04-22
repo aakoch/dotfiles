@@ -1,8 +1,10 @@
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
+source .sensitive
+
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/<< REPLACE ME>>/.oh-my-zsh
+export ZSH=$HOME/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -131,7 +133,7 @@ export JAVA8_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Ho
 export JAVA10_HOME=/Library/Java/JavaVirtualMachines/jdk-10.0.1.jdk/Contents/Home
 export PATH=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home/bin:/Applications/gradle-4.10.3/bin:/Applications/groovy-2.4.15/bin:$PATH
 export NVM_DIR="$HOME/.nvm"
-export JENKINS_HOME=/Users/<< REPLACE ME>>/.jenkins
+export JENKINS_HOME=$HOME/.jenkins
 
 . "/usr/local/opt/nvm/nvm.sh"
 PROJECT_PATHS=(~/projects)
@@ -213,5 +215,7 @@ function notify() {
 function whitenoise() {
   play -n synth brownnoise synth pinknoise mix  gain -24
 }
+
+git config --global user.email "$WORK_EMAIL"
 
 #read -s password; export password=$password
