@@ -1,0 +1,52 @@
+[user]
+	name = Koch, Adam A
+	email = <<Removed>>
+[alias]
+co = checkout
+  ignore=!([ ! -e .gitignore ] && touch .gitignore) | (test "$(tail -c 1 ".gitignore")" && echo '' >>.gitignore) | echo $1 >>.gitignore
+  ignored=ls-files --ignored --exclude-standard
+  untracked=ls-files --other --exclude-standard
+  alias = config --get-regexp ^alias\\.
+  undo=reset --soft HEAD^
+  hist = log --graph --date-order --date=short --pretty=format:'%C(auto)%h%d %C(reset)%s %C(bold blue)%ce %C(reset)%C(green)%cr (%cd)'
+
+  ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate -n 10
+  ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat -n 20
+  logtree = log --graph --oneline --decorate --all
+
+  # unstages a file. use like 'git unstage filename'
+  unstage = reset HEAD --
+
+  # resets all uncomitted changes and files
+  abort = reset --hard HEAD
+
+  # shows diff only for files staged to commit
+  new = diff --cached
+
+  cp = cherry-pick
+
+  unstash = stash pop
+  pop = stash
+
+   # based on: https://gist.github.com/intel352/9761288
+  show-closest-branch = rev-parse --abbrev-ref HEAD
+  # based on: http://stackoverflow.com/questions/3161204/find-the-parent-branch-of-a-git-branch
+  show-closest-parent-branch = !"git show-branch -a --no-color 2> /dev/null | awk -F '[]^~[]' -v current_branch=`git show-closest-branch 2> /dev/null || true` 'BEGIN { rc=1 ; if ( length( current_branch ) == 0 ) { exit } } ( ( index( $1, \"*\" ) > 0 ) && ( length( $2 ) > 0 ) && ( $2 != current_branch ) ) { print $2 ; rc=0 ; exit } END { exit rc }'"
+  # short versions
+  cb = !git show-closest-branch
+  pb = !git show-closest-parent-branch
+
+  lasttag = describe --abbrev=0 --first-parent
+
+  getrepo = remote get-url --all origin
+  lol = log --graph --decorate --pretty=oneline --abbrev-commit
+  lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
+
+[core]
+  excludesfile = $HOME/.gitignore
+  pager = less -F -X
+	autocrlf = input
+#[rebase]
+#  instructionFormat = %gD %cr %s %<(50,trunc)%b
+[format]
+  pretty = format:%Cred%h %Cblue%an, %Cgreen%ar %Creset%<(120,mtrunc)%s
