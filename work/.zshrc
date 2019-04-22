@@ -2,7 +2,7 @@
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 
 # Path to your oh-my-zsh installation.
-export ZSH=/Users/<<REPLACE ME>>/.oh-my-zsh
+export ZSH=/Users/<< REPLACE ME>>/.oh-my-zsh
 
 # Set name of the theme to load. Optionally, if you set this to "random"
 # it'll load a random theme each time that oh-my-zsh is loaded.
@@ -100,6 +100,13 @@ source $ZSH/oh-my-zsh.sh
 # ssh
 # export SSH_KEY_PATH="~/.ssh/rsa_id"
 
+# if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+#     ssh-agent > ~/.ssh-agent-thing
+# fi
+# if [[ "$SSH_AGENT_PID" == "" ]]; then
+#     eval "$(<~/.ssh-agent-thing)"
+# fi
+
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
 # users are encouraged to define aliases within the ZSH_CUSTOM folder.
@@ -116,12 +123,15 @@ alias copy=pbcopy
 alias paste=pbpaste
 alias finder="open ."
 alias branch="git rev-parse --abbrev-ref HEAD"
-alias time_summary="python ~/projects/readdates.py"
+alias time_summary="python3 ~/projects/readdates/readdates.py"
+alias lf='ls -d'
+alias lsd='ls -ld .?*'
 
 export JAVA8_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home
 export JAVA10_HOME=/Library/Java/JavaVirtualMachines/jdk-10.0.1.jdk/Contents/Home
-export PATH=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home/bin:/Applications/gradle-4.7/bin:/Applications/groovy-2.4.15/bin:$PATH
+export PATH=/Library/Java/JavaVirtualMachines/jdk1.8.0_172.jdk/Contents/Home/bin:/Applications/gradle-4.10.3/bin:/Applications/groovy-2.4.15/bin:$PATH
 export NVM_DIR="$HOME/.nvm"
+export JENKINS_HOME=/Users/<< REPLACE ME>>/.jenkins
 
 . "/usr/local/opt/nvm/nvm.sh"
 PROJECT_PATHS=(~/projects)
@@ -139,6 +149,13 @@ function plugins() {
 function record() {
   echo "$(gdate --iso-8601=seconds) $@" >> ~/Documents/time.txt
   tail ~/Documents/time.txt
+}
+
+function todo() {
+  if [[ $# -ne 0 ]]; then
+  echo "$(gdate --iso-8601=seconds) $@" >> ~/Documents/todo.txt
+  fi
+  tail ~/Documents/todo.txt
 }
 
 function gitlog() {
@@ -184,3 +201,17 @@ function xmlformat() {
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
 
+iterm2_print_user_vars() {
+  iterm2_set_user_var gitBranch $((git branch 2> /dev/null) | grep \* | cut -c3-)
+}
+
+function notify() {
+  X="$*"
+  osascript -e "display notification \"$X\" with title \"Notification\""
+}
+
+function whitenoise() {
+  play -n synth brownnoise synth pinknoise mix  gain -24
+}
+
+#read -s password; export password=$password
